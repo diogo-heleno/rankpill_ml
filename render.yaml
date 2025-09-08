@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: rankpill-ml
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn -w 2 -k gthread -t 120 -b 0.0.0.0:$PORT app:app
+    plan: starter
+    healthCheckPath: /rankpill/webhook
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OUTPUT_EMAIL_USERNAME
+        sync: false
+      - key: OUTPUT_EMAIL_PASSWORD
+        sync: false
+      - key: OUTPUT_EMAIL_TO
+        sync: false
