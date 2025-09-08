@@ -1,0 +1,28 @@
+name: Process Article
+
+on:
+  schedule:
+    - cron: "0 9 * * *"   # runs daily at 09:00 UTC
+  workflow_dispatch:      # manual trigger
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: pip install openai
+
+      - name: Run processor
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OUTPUT_EMAIL_USERNAME: ${{ secrets.OUTPUT_EMAIL_USERNAME }}
+          OUTPUT_EMAIL_PASSWORD: ${{ secrets.OUTPUT_EMAIL_PASSWORD }}
+          OUTPUT_EMAIL_TO: ${{ secrets.OUTPUT_EMAIL_TO }}
+        run: python process_article.py
