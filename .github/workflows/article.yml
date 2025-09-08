@@ -1,25 +1,26 @@
-name: Process Article
+name: Process incoming article email
 
 on:
   schedule:
-    - cron: "0 9 * * *"   # runs daily at 09:00 UTC
-  workflow_dispatch:      # manual trigger
+    - cron: "0 7 * * *"   # daily 07:00 UTC
+  workflow_dispatch: {}
 
 jobs:
-  build:
+  run:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: "3.10"
+          python-version: "3.11"
 
-      - name: Install dependencies
-        run: pip install openai
+      - name: Install deps
+        run: |
+          pip install openai
 
-      - name: Run processor
+      - name: Process article
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           OUTPUT_EMAIL_USERNAME: ${{ secrets.OUTPUT_EMAIL_USERNAME }}
